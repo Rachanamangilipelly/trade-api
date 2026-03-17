@@ -67,6 +67,7 @@ cp .env.example .env
 # 4. Run
 python run.py
 # Open http://localhost:8000
+or python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
 ### Option B — Docker
