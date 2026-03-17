@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>India Trade Intelligence — Market Opportunity Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+  :root {
+    --ink: #0d1117;
+    --paper: #fafaf8;
+    --saffron: #FF9933;
+    --saffron-light: #fff3e6;
+    --green: #138808;
+    --green-light: #e8f5e9;
+    --navy: #000080;
+    --navy-light: #e8eaf6;
+    --gold: #c8960c;
+    --muted: #6b7280;
+    --border: #e5e5e0;
+    --surface: #ffffff;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--ink);
+    color: white;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--saffron);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-flag {
+    display: flex;
+    flex-direction: column;
+    width: 28px;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .logo-flag span {
+    height: 9px;
+    display: block;
+  }
+
+  .logo-flag span:nth-child(1) { background: #FF9933; }
+  .logo-flag span:nth-child(2) { background: white; position: relative; }
+  .logo-flag span:nth-child(2)::after {
+    content: '⊕';
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%,-50%);
+    color: #000080;
+    font-size: 7px;
+    line-height: 1;
+  }
+  .logo-flag span:nth-child(3) { background: #138808; }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-text span { color: var(--saffron); }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .session-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: rgba(255,255,255,0.7);
+    display: none;
+  }
+
+  .session-badge.active { display: block; color: #86efac; border-color: #86efac; }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, var(--ink) 0%, #1a1f2e 60%, #0d2137 100%);
+    color: white;
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 20% 50%, rgba(255,153,51,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 50%, rgba(19,136,8,0.08) 0%, transparent 60%);
+  }
+
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--saffron);
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.2rem;
+    position: relative;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--saffron);
+  }
+
+  .hero p {
+    color: rgba(255,255,255,0.65);
+    font-size: 1.05rem;
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
+    position: relative;
+  }
+
+  /* ── Main Layout ── */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .main {
+    padding: 3rem 0 5rem;
+  }
+
+  /* ── Auth Card ── */
+  .auth-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .auth-section {
+    flex: 1;
+    min-width: 280px;
+  }
+
+  .field-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    background: var(--paper);
+    color: var(--ink);
+    transition: border-color 0.15s;
+    outline: none;
+  }
+
+  .input:focus { border-color: var(--saffron); }
+  .input::placeholder { color: #aaa; }
+
+  .btn {
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: white;
+  }
+
+  .btn-primary:hover { background: #1a2030; transform: translateY(-1px); }
+
+  .btn-secondary {
+    background: var(--saffron);
+    color: white;
+  }
+
+  .btn-secondary:hover { background: #e8832a; transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+  }
+
+  .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding: 0 4px;
+    align-self: center;
+  }
+
+  .auth-divider::before, .auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    width: 24px;
+  }
+
+  /* ── Sectors Grid ── */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+
+  .sectors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+
+  .sector-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .sector-chip:hover {
+    border-color: var(--saffron);
+    background: var(--saffron-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,153,51,0.15);
+  }
+
+  .sector-chip.selected {
+    border-color: var(--saffron);
+    background: var(--saffron-light);
+    font-weight: 600;
+  }
+
+  .sector-icon { font-size: 1.2rem; }
+
+  /* ── Analyze Bar ── */
+  .analyze-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+  }
+
+  .analyze-bar .input {
+    flex: 1;
+  }
+
+  /* ── Rate Limit Bar ── */
+  .rate-info {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .rate-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+
+  .rate-pill .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+  }
+
+  .rate-pill .dot.warn { background: var(--gold); }
+  .rate-pill .dot.danger { background: var(--danger); }
+
+  /* ── Report ── */
+  .report-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .report-header {
+    background: linear-gradient(90deg, var(--ink) 0%, #1a2030 100%);
+    color: white;
+    padding: 1.2rem 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap;
+    gap: 12px;
+  }
+
+  .report-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+  }
+
+  .report-meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .badge-saffron { background: var(--saffron); color: white; }
+  .badge-green { background: var(--green); color: white; }
+  .badge-navy { background: var(--navy); color: white; }
+  .badge-cached { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.2); }
+
+  .report-body {
+    padding: 2.5rem;
+    overflow-x: auto;
+  }
+
+  /* Markdown Rendering */
+  .report-body h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: var(--ink);
+    border-bottom: 3px solid var(--saffron);
+    padding-bottom: 0.6rem;
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+  }
+
+  .report-body h1 + p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.8rem; }
+
+  .report-body hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+  }
+
+  .report-body h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 2rem 0 0.8rem;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .report-body h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin: 1.2rem 0 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .report-body p { color: #374151; line-height: 1.75; margin-bottom: 0.8rem; font-size: 0.97rem; }
+
+  .report-body ul, .report-body ol {
+    padding-left: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .report-body li {
+    line-height: 1.7;
+    color: #374151;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+  }
+
+  .report-body strong { color: var(--ink); font-weight: 600; }
+
+  .report-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: 0.88rem;
+  }
+
+  .report-body th {
+    background: var(--ink);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .report-body th:first-child { border-radius: 6px 0 0 0; }
+  .report-body th:last-child { border-radius: 0 6px 0 0; }
+
+  .report-body td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: #374151;
+    vertical-align: top;
+  }
+
+  .report-body tr:nth-child(even) td { background: var(--paper); }
+  .report-body tr:last-child td:first-child { border-radius: 0 0 0 6px; }
+  .report-body tr:last-child td:last-child { border-radius: 0 0 6px 0; }
+
+  .report-body blockquote {
+    border-left: 4px solid var(--saffron);
+    background: var(--saffron-light);
+    padding: 0.8rem 1.2rem;
+    border-radius: 0 8px 8px 0;
+    margin: 1rem 0;
+    color: #92400e;
+    font-size: 0.92rem;
+  }
+
+  .report-body code {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85em;
+    background: var(--paper);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--navy);
+  }
+
+  .report-actions {
+    padding: 1.2rem 1.8rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    background: var(--paper);
+  }
+
+  /* ── States ── */
+  .loading-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--saffron);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1.5rem;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-state h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .loading-state p { color: var(--muted); font-size: 0.9rem; }
+
+  .error-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--danger);
+  }
+
+  .error-state .error-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .error-state h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .error-state p { color: var(--muted); font-size: 0.9rem; }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+  }
+
+  .empty-state .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.6; }
+  .empty-state h3 { font-size: 1.1rem; color: var(--ink); margin-bottom: 0.5rem; }
+  .empty-state p { font-size: 0.9rem; }
+
+  /* ── Toast ── */
+  .toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
+
+  .toast {
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.25s ease;
+    max-width: 320px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toast-success { background: #f0fdf4; border: 1px solid #86efac; color: #15803d; }
+  .toast-error { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; }
+  .toast-info { background: #eff6ff; border: 1px solid #93c5fd; color: #1d4ed8; }
+
+  @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .auth-card { flex-direction: column; }
+    .report-body { padding: 1.5rem; }
+    .hero { padding: 3rem 1.5rem 2.5rem; }
+  }
+
+  /* ── Misc ── */
+  .text-muted { color: var(--muted); font-size: 0.85rem; }
+  .mt-1 { margin-top: 0.5rem; }
+  .hidden { display: none !important; }
+
+  .step-indicator {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .step {
+    flex: 1;
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .step:last-child { border-right: none; }
+
+  .step.done { color: var(--success); background: var(--green-light); }
+  .step.active { color: var(--saffron); font-weight: 600; background: var(--saffron-light); }
+
+  .step-num {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .step.done .step-num { background: var(--success); color: white; }
+  .step.active .step-num { background: var(--saffron); color: white; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-flag">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="logo-text">Trade<span>Intel</span></div>
+  </div>
+  <div class="header-right">
+    <div class="session-badge" id="sessionBadge">● Connected</div>
+    <a href="/docs" target="_blank" class="btn btn-ghost" style="padding:6px 14px;font-size:0.82rem;">API Docs ↗</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-eyebrow">India Market Intelligence Platform</div>
+  <h1>Discover <em>Trade Opportunities</em><br>Across Indian Sectors</h1>
+  <p>AI-powered market analysis combining live data and Gemini intelligence to surface actionable export & import opportunities.</p>
+</section>
+
+<!-- Main -->
+<main class="main">
+  <div class="container">
+
+    <!-- Step Indicator -->
+    <div class="step-indicator" id="stepIndicator">
+      <div class="step active" id="step1"><span class="step-num">1</span> Authenticate</div>
+      <div class="step" id="step2"><span class="step-num">2</span> Select Sector</div>
+      <div class="step" id="step3"><span class="step-num">3</span> View Report</div>
+    </div>
+
+    <!-- Auth Card -->
+    <div class="auth-card" id="authCard">
+      <div class="auth-section">
+        <label class="field-label">Guest Access (instant)</label>
+        <p class="text-muted mt-1">No credentials required — rate limited to 10 requests/min</p>
+      </div>
+      <button class="btn btn-secondary" id="guestBtn" onclick="createGuestSession()">
+        ⚡ Start as Guest
+      </button>
+      <div class="auth-divider">or</div>
+      <div class="auth-section">
+        <label class="field-label">API Key (extended access)</label>
+        <input class="input" type="password" id="apiKeyInput" placeholder="Enter your API key..." />
+      </div>
+      <button class="btn btn-primary" onclick="loginWithKey()">🔐 Login</button>
+    </div>
+
+    <!-- Sector Selection (hidden until auth) -->
+    <div id="analyzeSection" class="hidden">
+      <div class="section-title">Select a Sector to Analyze</div>
+      <div class="sectors-grid" id="sectorsGrid"></div>
+
+      <div class="analyze-bar">
+        <input class="input" id="customSector" placeholder="Or type any sector (e.g. ceramics, food processing, defence)..." />
+        <button class="btn btn-secondary" id="analyzeBtn" onclick="analyzeSector()">
+          🔍 Analyze
+        </button>
+        <button class="btn btn-ghost" onclick="logout()" style="padding:10px 14px;">Sign Out</button>
+      </div>
+
+      <!-- Rate Limit Info -->
+      <div class="rate-info" id="rateInfo"></div>
+    </div>
+
+    <!-- Report Area -->
+    <div id="reportArea"></div>
+
+  </div>
+</main>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+let token = null;
+let selectedSector = null;
+
+// ── Utilities ─────────────────────────────────────────────────────────────────
+function showToast(msg, type = 'info') {
+  const icons = { success: '✓', error: '✕', info: 'ℹ' };
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+
+function setStep(n) {
+  [1,2,3].forEach(i => {
+    const el = document.getElementById(`step${i}`);
+    el.className = 'step' + (i < n ? ' done' : i === n ? ' active' : '');
+  });
+}
+
+function updateRateInfo(rl) {
+  if (!rl) return;
+  const pct = rl.remaining / rl.limit;
+  const dotClass = pct > 0.5 ? '' : pct > 0.2 ? ' warn' : ' danger';
+  document.getElementById('rateInfo').innerHTML = `
+    <div class="rate-pill"><span class="dot${dotClass}"></span> ${rl.remaining}/${rl.limit} requests remaining</div>
+    <div class="rate-pill">🕐 Window: ${rl.window_seconds}s</div>
+  `;
+}
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+async function createGuestSession() {
+  const btn = document.getElementById('guestBtn');
+  btn.disabled = true;
+  btn.textContent = 'Connecting...';
+  try {
+    const res = await fetch('/auth/guest', { method: 'POST' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Auth failed');
+    token = data.token;
+    onAuthSuccess('Guest');
+    showToast('Guest session started!', 'success');
+  } catch(e) {
+    showToast(e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '⚡ Start as Guest';
+  }
+}
+
+async function loginWithKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key) return showToast('Enter an API key', 'error');
+  try {
+    const res = await fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ api_key: key })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Login failed');
+    token = data.token;
+    onAuthSuccess('Authenticated');
+    showToast('Logged in successfully!', 'success');
+  } catch(e) {
+    showToast(e.message, 'error');
+  }
+}
+
+function onAuthSuccess(type) {
+  document.getElementById('authCard').classList.add('hidden');
+  document.getElementById('analyzeSection').classList.remove('hidden');
+  document.getElementById('sessionBadge').classList.add('active');
+  document.getElementById('sessionBadge').textContent = `● ${type}`;
+  setStep(2);
+  loadSectors();
+}
+
+async function logout() {
+  try {
+    await fetch('/session', { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+  } catch(e) {}
+  token = null;
+  selectedSector = null;
+  document.getElementById('authCard').classList.remove('hidden');
+  document.getElementById('analyzeSection').classList.add('hidden');
+  document.getElementById('sessionBadge').classList.remove('active');
+  document.getElementById('reportArea').innerHTML = '';
+  document.getElementById('rateInfo').innerHTML = '';
+  setStep(1);
+  showToast('Signed out', 'info');
+}
+
+// ── Sectors ───────────────────────────────────────────────────────────────────
+async function loadSectors() {
+  try {
+    const res = await fetch('/sectors');
+    const data = await res.json();
+    const grid = document.getElementById('sectorsGrid');
+    grid.innerHTML = data.sectors.map(s => `
+      <div class="sector-chip" onclick="selectSector('${s.id}', this)">
+        <span class="sector-icon">${s.icon}</span>
+        <span>${s.label}</span>
+      </div>
+    `).join('');
+  } catch(e) {
+    showToast('Could not load sectors', 'error');
+  }
+}
+
+function selectSector(id, el) {
+  document.querySelectorAll('.sector-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSector = id;
+  document.getElementById('customSector').value = '';
+  document.getElementById('analyzeBtn').textContent = `🔍 Analyze ${id.replace('-', ' ')}`;
+}
+
+// ── Analysis ──────────────────────────────────────────────────────────────────
+async function analyzeSector() {
+  const custom = document.getElementById('customSector').value.trim();
+  const sector = custom || selectedSector;
+  if (!sector) return showToast('Select or type a sector first', 'error');
+  if (!token) return showToast('Please authenticate first', 'error');
+
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Analyzing...';
+
+  document.getElementById('reportArea').innerHTML = `
+    <div class="report-card">
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <h3>Generating Market Intelligence Report</h3>
+        <p>Collecting live data → Running AI analysis → Structuring insights...</p>
+      </div>
+    </div>
+  `;
+
+  setStep(3);
+
+  try {
+    const res = await fetch(`/analyze/${encodeURIComponent(sector)}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || `Error ${res.status}`);
+
+    updateRateInfo(data.rate_limit);
+    renderReport(data);
+    showToast('Report ready!', 'success');
+  } catch(e) {
+    document.getElementById('reportArea').innerHTML = `
+      <div class="report-card">
+        <div class="error-state">
+          <div class="error-icon">⚠️</div>
+          <h3>Analysis Failed</h3>
+          <p>${e.message}</p>
+        </div>
+      </div>
+    `;
+    showToast(e.message, 'error');
+    setStep(2);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = selectedSector ? `🔍 Analyze ${selectedSector}` : '🔍 Analyze';
+  }
+}
+
+function renderReport(data) {
+  const html = marked.parse(data.report);
+  const sector = data.sector;
+  const cachedLabel = data.cached
+    ? '<span class="badge badge-cached">⚡ Cached</span>'
+    : '<span class="badge badge-green">✦ Fresh</span>';
+
+  document.getElementById('reportArea').innerHTML = `
+    <div class="report-card">
+      <div class="report-header">
+        <h2>📊 ${sector.charAt(0).toUpperCase() + sector.slice(1)} — Market Report</h2>
+        <div class="report-meta">
+          ${cachedLabel}
+          <span class="badge badge-saffron">🇮🇳 India</span>
+          <span style="font-size:0.75rem;color:rgba(255,255,255,0.5)">
+            ${new Date(data.generated_at).toLocaleString()}
+          </span>
+        </div>
+      </div>
+      <div class="report-body">${html}</div>
+      <div class="report-actions">
+        <button class="btn btn-primary" onclick="downloadReport(${JSON.stringify(data.report).replace(/\//g,'\\/').replace(/</g,'&lt;')}, '${sector}')">
+          ⬇ Download .md
+        </button>
+        <button class="btn btn-ghost" onclick="copyReport()">📋 Copy</button>
+      </div>
+    </div>
+  `;
+}
+
+function downloadReport(report, sector) {
+  const blob = new Blob([report], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `india-trade-report-${sector}-${new Date().toISOString().slice(0,10)}.md`;
+  a.click();
+  showToast('Report downloaded!', 'success');
+}
+
+async function copyReport() {
+  const text = document.querySelector('.report-body')?.innerText || '';
+  await navigator.clipboard.writeText(text);
+  showToast('Copied to clipboard!', 'success');
+}
+</script>
+</body>
+</html>
